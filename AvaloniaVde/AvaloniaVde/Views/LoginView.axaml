@@ -1,0 +1,87 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:AvaloniaVde.ViewModels"
+             xmlns:models="using:AvaloniaVde.Models"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:LoginViewModel"
+             x:Class="AvaloniaVde.Views.LoginView">
+    <ScrollViewer>
+        <Border MaxWidth="480"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Margin="20"
+                Padding="24"
+                Background="#F5F5F5"
+                CornerRadius="12">
+            <StackPanel Spacing="12">
+                <TextBlock Text="Вход в систему"
+                           FontSize="26"
+                           HorizontalAlignment="Center" />
+
+                <TextBlock Text="{Binding ShiftStatusText}"
+                           FontSize="14"
+                           Foreground="Gray"
+                           HorizontalAlignment="Center" />
+
+                <TextBlock Text="Выбор смены" FontSize="16" />
+                <ComboBox ItemsSource="{Binding Shifts}"
+                          SelectedItem="{Binding SelectedShift}"
+                          HorizontalAlignment="Stretch" />
+
+                <TextBlock Text="Пользователь" FontSize="16" />
+                <ComboBox ItemsSource="{Binding Users}"
+                          SelectedItem="{Binding SelectedUser}"
+                          HorizontalAlignment="Stretch">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="models:User">
+                            <TextBlock Text="{Binding DisplayName}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <TextBlock Text="Пароль" FontSize="16" />
+                <TextBox Text="{Binding Password}"
+                         PasswordChar="●"
+                         PlaceholderText="Введите пароль"
+                         HorizontalAlignment="Stretch" />
+
+                <TextBlock Text="{Binding Message}"
+                           Foreground="Red"
+                           FontSize="14"
+                           TextWrapping="Wrap" />
+
+                <WrapPanel HorizontalAlignment="Center" ItemWidth="200" ItemHeight="45">
+                    <Button Content="Вход"
+                            Command="{Binding LoginCommand}"
+                            Background="{StaticResource BrandBrush}"
+                            Foreground="White"
+                            Margin="5"
+                            Width="180"
+                            Height="45" />
+                    <Button Content="{Binding ShiftButtonText}"
+                            Command="{Binding ToggleShiftCommand}"
+                            Background="Orange"
+                            Foreground="White"
+                            Margin="5"
+                            Width="180"
+                            Height="45" />
+                </WrapPanel>
+
+                <CheckBox Content="Режим Slave"
+                          IsChecked="{Binding IsSlaveMode}"
+                          HorizontalAlignment="Center" />
+
+                <Button Content="Весы"
+                        Command="{Binding NavigateToScalesCommand}"
+                        Background="#3498DB"
+                        Foreground="White"
+                        HorizontalAlignment="Left"
+                        Width="120"
+                        Height="45"
+                        CornerRadius="5" />
+            </StackPanel>
+        </Border>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,32 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AvaloniaVde.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="using:AvaloniaVde.Views"
+        mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="768"
+        x:Class="AvaloniaVde.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Width="1024" Height="768"
+        WindowStartupLocation="CenterScreen"
+        Title="AvaloniaVde">
+    <Panel>
+        <ContentControl x:Name="MainContent" Opacity="0">
+            <ContentControl.Transitions>
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.6" Easing="CubicEaseOut" />
+                </Transitions>
+            </ContentControl.Transitions>
+            <views:MainView />
+        </ContentControl>
+
+        <Border x:Name="SplashOverlay" Background="White" ZIndex="10">
+            <Border.Transitions>
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.5" Easing="CubicEaseIn" />
+                </Transitions>
+            </Border.Transitions>
+            <Image Source="/Assets/logo.png" Stretch="Uniform" />
+        </Border>
+    </Panel>
+</Window>

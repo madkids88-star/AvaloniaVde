@@ -1,0 +1,6 @@
+﻿<Solution>
+  <Project Path="AvaloniaVde/AvaloniaVde.Android/AvaloniaVde.Android.csproj" />
+  <Project Path="AvaloniaVde/AvaloniaVde.Desktop/AvaloniaVde.Desktop.csproj" />
+  <Project Path="AvaloniaVde/AvaloniaVde.Linux/AvaloniaVde.Linux.csproj" />
+  <Project Path="AvaloniaVde/AvaloniaVde/AvaloniaVde.csproj" />
+</Solution>
