@@ -1,0 +1,21 @@
+#!/bin/sh
+
+error=0
+
+files=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(cs|axaml)$')
+
+for f in $files; do
+  [ -f "$f" ] || continue
+  bom=$(head -c 3 "$f" | od -An -tx1 | tr -d ' \n')
+  if [ "$bom" != "efbbbf" ]; then
+    echo "ERROR: $f has no UTF-8 BOM. Resave as UTF-8 with BOM."
+    error=1
+  fi
+done
+
+if [ $error -ne 0 ]; then
+  echo "Commit blocked: fix encoding (UTF-8 BOM, CRLF)."
+  exit 1
+fi
+
+exit 0
