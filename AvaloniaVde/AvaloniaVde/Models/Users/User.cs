@@ -1,4 +1,4 @@
-﻿namespace AvaloniaVde.Models;
+﻿namespace AvaloniaVde.Models.Users;
 
 public class User
 {
@@ -6,18 +6,19 @@ public class User
     public string UserName { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
     public int Privilege { get; set; }
+    public bool IsDefault { get; set; }
 
-    public string DisplayName => $"{UserName} ({GetPrivilegeName()})";
+    public string DisplayName => UserName;
 
     public string GetPrivilegeName()
     {
         return Privilege switch
         {
-            10 => "Администратор",
-            20 => "Сервис",
-            30 => "Технолог",
-            40 => "Оператор",
-            _ => $"Неизвестно ({Privilege})"
+            10 => "Administrator",
+            20 => "Service",
+            30 => "Technolog",
+            40 => "Operator",
+            _ => $"Unknown ({Privilege})"
         };
     }
 }

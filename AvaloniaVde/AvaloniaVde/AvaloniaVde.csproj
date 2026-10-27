@@ -20,5 +20,12 @@
     </PackageReference>
     <PackageReference Include="ReactiveUI.Avalonia" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="LiteDB" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="appsettings.json" LogicalName="AvaloniaVde.appsettings.json" />
   </ItemGroup>
 </Project>

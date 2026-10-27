@@ -1,12 +1,20 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive;
-using AvaloniaVde.Models;
-using AvaloniaVde.Services;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+using AvaloniaVde.Models.Users;
+using AvaloniaVde.Services.Navigation;
+using AvaloniaVde.Services.Db.Repositories;
+using AvaloniaVde.Services.Security;
 using ReactiveUI;
+using ReactiveUI.Avalonia;
 
 namespace AvaloniaVde.ViewModels;
 
-public class LoginViewModel : ViewModelBase
+public class LoginViewModel : ViewModelBase, IDisposable
 {
     public override string Title => "Вход в систему";
 
@@ -19,28 +27,39 @@ public class LoginViewModel : ViewModelBase
     private string _shiftButtonText = "Открыть смену";
     private string _shiftStatusText = "Смена закрыта";
 
-    public ObservableCollection<User> Users { get; } = new()
-    {
-        new User { Id = 1, UserName = "Administrator", Password = "111111", Privilege = UserPrivileges.Administrator },
-        new User { Id = 2, UserName = "Service", Password = "7832", Privilege = UserPrivileges.Service },
-        new User { Id = 3, UserName = "Tehnolog", Password = "555", Privilege = UserPrivileges.Technolog },
-        new User { Id = 4, UserName = "Operator", Password = "111", Privilege = UserPrivileges.Operator },
-    };
+    public ObservableCollection<User> Users { get; } = new();
 
     public ObservableCollection<string> Shifts { get; } = new() { "Смена 1", "Смена 2", "Смена 3" };
 
     private readonly INavigationService _nav;
     private readonly IScreenFactory _factory;
+    private readonly IUserRepository _users;
+    private readonly ISessionService _session;
+    private readonly SerialDisposable _messageReset = new();
 
-    public LoginViewModel(INavigationService nav, IScreenFactory factory)
+    public LoginViewModel(INavigationService nav, IScreenFactory factory, IUserRepository users, ISessionService session)
     {
         _nav = nav;
         _factory = factory;
-        SelectedUser = Users[0];
+        _users = users;
+        _session = session;
 
         LoginCommand = ReactiveCommand.Create(ExecuteLogin);
         ToggleShiftCommand = ReactiveCommand.Create(ExecuteToggleShift);
         NavigateToScalesCommand = ReactiveCommand.Create(ExecuteNavigateToScales);
+    }
+
+    public async Task LoadAsync()
+    {
+        var users = await Task.Run(() => _users.GetAll().ToList());
+
+        await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            Users.Clear();
+            foreach (var user in users)
+                Users.Add(user);
+            SelectedUser = Users.FirstOrDefault();
+        });
     }
 
     public User? SelectedUser
@@ -66,7 +85,18 @@ public class LoginViewModel : ViewModelBase
     public string Message
     {
         get => _message;
-        set => this.RaiseAndSetIfChanged(ref _message, value);
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _message, value);
+            _messageReset.Disposable = null;
+            if (!string.IsNullOrEmpty(value))
+            {
+                _messageReset.Disposable = Observable
+                    .Timer(TimeSpan.FromSeconds(2))
+                    .ObserveOn(AvaloniaScheduler.Instance)
+                    .Subscribe(_ => Message = string.Empty);
+            }
+        }
     }
 
     public bool IsSlaveMode
@@ -111,7 +141,6 @@ public class LoginViewModel : ViewModelBase
     {
         if (IsSlaveMode)
         {
-            Message = "Вход выполнен (режим Slave)";
             NavigateToDosing();
             return;
         }
@@ -130,13 +159,14 @@ public class LoginViewModel : ViewModelBase
 
         if (SelectedUser.Password == Password)
         {
-            Message = $"Пользователь {SelectedUser.UserName} авторизован";
+            _session.SignIn(SelectedUser);
+            Password = string.Empty;
             NavigateToDosing();
         }
         else
         {
-            Message = "Неверный пароль!";
             Password = string.Empty;
+            Message = "Неверный пароль!";
         }
     }
 
@@ -149,15 +179,17 @@ public class LoginViewModel : ViewModelBase
         {
             ShiftButtonText = "Закрыть смену";
             ShiftStatusText = $"{SelectedShift} открыта";
-            Message = $"{SelectedShift} открыта";
         }
         else
         {
             ShiftButtonText = "Открыть смену";
             ShiftStatusText = "Смена закрыта";
-            Message = "Смена закрыта";
         }
     }
+
+    public override Task OnActivatedAsync() => LoadAsync();
+
+    public void Dispose() => _messageReset.Dispose();
 
     private void ExecuteNavigateToScales()
     {

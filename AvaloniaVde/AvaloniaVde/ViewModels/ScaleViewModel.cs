@@ -1,5 +1,5 @@
 ﻿using System.Reactive;
-using AvaloniaVde.Services;
+using AvaloniaVde.Services.Navigation;
 using ReactiveUI;
 
 namespace AvaloniaVde.ViewModels;

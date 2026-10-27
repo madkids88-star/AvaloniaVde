@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using AvaloniaVde.ViewModels;
 
-namespace AvaloniaVde.Services;
+namespace AvaloniaVde.Services.Navigation;
 
 public enum NavigationDirection
 {
@@ -16,6 +16,7 @@ public interface INavigationService
     NavigationDirection Direction { get; }
     event EventHandler? Navigated;
     void NavigateTo(ViewModelBase viewModel);
+    void ResetTo(ViewModelBase viewModel);
     bool GoBack();
 }
 
@@ -36,6 +37,14 @@ public class NavigationService : INavigationService
         if (CurrentPage != null)
             _stack.Push(CurrentPage);
 
+        Direction = NavigationDirection.Forward;
+        CurrentPage = viewModel;
+        Navigated?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void ResetTo(ViewModelBase viewModel)
+    {
+        _stack.Clear();
         Direction = NavigationDirection.Forward;
         CurrentPage = viewModel;
         Navigated?.Invoke(this, EventArgs.Empty);

@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using AvaloniaVde.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AvaloniaVde.Services;
+namespace AvaloniaVde.Services.Navigation;
 
 public interface IScreenFactory
 {

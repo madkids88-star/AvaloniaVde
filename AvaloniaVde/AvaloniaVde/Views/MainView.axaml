@@ -5,7 +5,14 @@
              xmlns:vm="using:AvaloniaVde.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaVde.Views.MainView"
-             x:DataType="vm:MainViewModel">
+             x:DataType="vm:MainViewModel"
+             Opacity="0">
+
+    <UserControl.Transitions>
+        <Transitions>
+            <DoubleTransition Property="Opacity" Duration="0:0:0.3" Easing="CubicEaseOut" />
+        </Transitions>
+    </UserControl.Transitions>
 
     <UserControl.Styles>
         <Style Selector="Button.TopBarButton">
@@ -17,15 +24,16 @@
         </Style>
     </UserControl.Styles>
 
-    <Grid RowDefinitions="Auto,*,Auto" Background="#F5F5F5">
+    <Grid RowDefinitions="Auto,*,Auto">
         <Grid Grid.Row="0"
               Height="50"
               Background="{StaticResource BrandBrush}"
-              ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto">
+              ColumnDefinitions="Auto,Auto,*,Auto,Auto,180">
             <Button Grid.Column="0"
                     Classes="TopBarButton"
                     Content="☰"
-                    Command="{Binding BackCommand}"
+                    Command="{Binding MenuCommand}"
+                    IsEnabled="{Binding IsAuthenticated}"
                     Margin="8,0" />
             <TextBlock Grid.Column="1"
                        Text="{Binding Title}"
@@ -42,6 +50,9 @@
             <Button Grid.Column="3"
                     Classes="TopBarButton"
                     Content="{Binding UserName}"
+                    Command="{Binding LogoutCommand}"
+                    IsEnabled="{Binding IsAuthenticated}"
+                    ToolTip.Tip="Выйти"
                     Margin="8,0" />
             <TextBlock Grid.Column="4"
                        Text="{Binding ShiftStatusText}"
@@ -54,6 +65,8 @@
                        Foreground="White"
                        FontSize="14"
                        VerticalAlignment="Center"
+                       TextAlignment="Right"
+                       FontFeatures="tnum"
                        Margin="8,0,12,0" />
         </Grid>
 
@@ -79,3 +92,4 @@
         </Grid>
     </Grid>
 </UserControl>
+

@@ -3,19 +3,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:AvaloniaVde.ViewModels"
-             xmlns:models="using:AvaloniaVde.Models"
+             xmlns:models="using:AvaloniaVde.Models.Users"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="vm:LoginViewModel"
              x:Class="AvaloniaVde.Views.LoginView">
     <ScrollViewer>
-        <Border MaxWidth="480"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Margin="20"
-                Padding="24"
-                Background="#F5F5F5"
-                CornerRadius="12">
-            <StackPanel Spacing="12">
+        <StackPanel MaxWidth="480"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Margin="20"
+                    Spacing="12">
                 <TextBlock Text="Вход в систему"
                            FontSize="26"
                            HorizontalAlignment="Center" />
@@ -81,7 +78,6 @@
                         Width="120"
                         Height="45"
                         CornerRadius="5" />
-            </StackPanel>
-        </Border>
+        </StackPanel>
     </ScrollViewer>
 </UserControl>

@@ -9,6 +9,7 @@
         Icon="/Assets/avalonia-logo.ico"
         Width="1024" Height="768"
         WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource WindowBackgroundBrush}"
         Title="AvaloniaVde">
     <Panel>
         <ContentControl x:Name="MainContent" Opacity="0">
